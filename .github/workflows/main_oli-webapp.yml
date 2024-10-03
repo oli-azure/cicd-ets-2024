@@ -28,13 +28,13 @@ jobs:
         run: dotnet test --configuration Release --no-build --verbosity normal
 
       - name: dotnet publish
-        run: dotnet publish MyWebApp/MyWebApp.csproj --configuration Release --no-build -o ./MyWebApp
+        run: dotnet publish MyWebApp/MyWebApp.csproj --configuration Release --no-build -o ./app
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: dotnet-app
-          path: ./MyWebApp
+          path: ./app
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,6 +50,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dotnet-app
+          path: ./app
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -64,5 +65,5 @@ jobs:
         with:
           app-name: 'oli-webapp'
           slot-name: 'Production'
-          package: ./dotnet-app
+          package: ./app
           
