@@ -64,5 +64,5 @@ jobs:
         with:
           app-name: 'oli-webapp'
           slot-name: 'Production'
-          package: ./MyWebApp
+          package: ./dotnet-app
           
