@@ -36,34 +36,34 @@ jobs:
           name: dotnet-app
           path: ./app
 
-    deploy:
-      runs-on: ubuntu-latest
-      needs: build
-      environment:
-        name: 'Production'
-        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-      permissions:
-        id-token: write #This is required for requesting the JWT
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
-      steps:
-        - name: Download artifact from build job
-          uses: actions/download-artifact@v4
-          with:
-            name: dotnet-app
-            path: ./app
-        
-        - name: Login to Azure
-          uses: azure/login@v2
-          with:
-            client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3F81538868914D7B92C1C1CD14F18005 }}
-            tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_767704C8415942219CFB1518AD541E90 }}
-            subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2028ADDE37E847A6AE98B29857DA7234 }}
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dotnet-app
+          path: ./app
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3F81538868914D7B92C1C1CD14F18005 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_767704C8415942219CFB1518AD541E90 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2028ADDE37E847A6AE98B29857DA7234 }}
 
-        - name: Deploy to Azure Web App
-          id: deploy-to-webapp
-          uses: azure/webapps-deploy@v3
-          with:
-            app-name: 'oli-webapp'
-            slot-name: 'Production'
-            package: ./app
-            
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'oli-webapp'
+          slot-name: 'Production'
+          package: ./app
+          
